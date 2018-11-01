@@ -1,7 +1,6 @@
-21:50-22:40 проектирование данных.
-23:24-35, 00:04-1:38 +5 создание блога, init commit c основой бэкенда и фронтенда.
-30+11+94+5=140= 2h 25m
-23:20-2:35 = 3h 15m
+2h 25m - проектирование данных, создание блога, init commit c основой бэкенда и фронтенда.
+3h 15m - теория
+1h 45m - теория
 
 # 2week2hours - Gamers
 
@@ -40,7 +39,7 @@ vue/vue-bootstrap/vue-router/laravel-mix (?!wtf, что это вообще та
 
 ## Проектирование данных
 
-## Обзор Doctrine (выжимка из документации)
+## Обзор Doctrine (выжимка из документации 2.8)
 
 Несмотря на то, что Doctrine я использую не первый год, пришлось перечитать документацию, чтобы нигде не наврать. Общим счетом это заняло у меня
 X часов.
@@ -63,6 +62,8 @@ PDOStatement    Doctrine\DBAL\Statement  (имплементирует Doctrine\
 Помимо этого, для каждого драйвера (или набора разных драйверов к одной базе, как например PDOMysql/Mysqli/ext-mysql)
 есть реализация интерфейса Doctrine\DBAL\Platforms, которая инкапсулирует множество специфичных особенностей конкретных баз данных
 в едином интерфейсе (мастхэв для изучения синтаксиса и особенностей БД).
+По $conn->getDatabasePlatform() можно идентифицировать текущее соединение для специфичных операций. Более того, указав 'platform'
+в опциях коннекта можно дать кастомный идентификатор для вызова непереносимого функционала.
 
 schema?
 
@@ -140,8 +141,91 @@ fetchAll($fetchStyle)   - берёт все строки
 
 [транзакции]
 
+Типичный пример:
+
+	$conn->beginTransaction();
+	try{
+	    // do stuff
+	    $conn->commit();
+	} catch (\Exception $e) {
+	    $conn->rollBack();
+	    throw $e;
+	}
+
+Также есть более лаконичный вариант:
+
+	$conn->transactional(function($conn) {
+	    // do stuff
+	});
+
+Транзакции имеют разные уровни изоляции (управление через Connection::setTransactionIsolation($level))
+
+	Connection::TRANSACTION_READ_UNCOMMITTED
+	Connection::TRANSACTION_READ_COMMITTED
+	Connection::TRANSACTION_REPEATABLE_READ
+	Connection::TRANSACTION_SERIALIZABLE
+
+Транзакции могут быть вложенными, но этот подход не рекомендуется.
+
+По умолчанию, все запросы выполняются сразу, без ожидания commit.
+Чтобы автоматически стартовать транзакцию и затем управлять ею, следует выключить автокоммит:
+
+	$conn->setAutoCommit(false);
+	$conn->connect();
+
+	try {
+	    // do stuff
+	    $conn->commit();
+	} catch (\Exception $e) {
+	    $conn->rollBack();
+	}
+
+Транзакции связаны с блокировками. Чтобы была возможность обрабатывать блокировки,
+следует ловить специальные эксепшены:
+\Doctrine\DBAL\Exception\RetryableException - общий
+	\Doctrine\DBAL\Exception\DeadlockException - если несколько коннектов обращаются к одному блоку
+	\Doctrine\DBAL\Exception\LockWaitTimeoutException - если транзакция по какой то причине долго ждёт своей очереди
+
+[Типы]
+Типы опять же независимы от платформы и конвертируются в конкретные типы БД.
+
+smallint - 2 байта                             int
+integer  - 4 байта                             int
+bigint   - 8 байт                              string
+demical  - фиксированная точность              string
+float    - плавающая точность                  float/double
+string   - строка конечной длины               string
+text     - строка без максимальной длины       string
+guid     - Globally Unique Identifier          string
+binary   - бинарник конечной длины             resource
+binary   - бинарник без максимальной длины     resource
+boolean  - обычно в БД это smallint            boolean
+date     - неизменяемая дата                   \DateTimeImmutable
+datetime - время без часовой зоны              \DateTime (парситься функцией date_create())
+datetime_immutable - неизменяемый datetime     \DateTimeImmutable
+datetimetz - время с зоной                     \DateTime
+datetimetz_immutable - неизменяемый datetimetz \DateTimeImmutable
+dateinterval - разница между 2 datetime        \DateInterval
+array - cериализация в строку                  array
+simple_array - implode(',' arr)                array
+json - UTF-8 валидный json                     array
+json_array - deprecated
+object - для сохранения PHP объекта            object (плохо работает из-за нул байтов, рекомендуется ручной base64_encode(serialize(obj))
+
+Doctrine чекает схему базы для обратного преобразования в PHP.
+(погонять типы)
+
+Пример кастомного типа (непонятнаа):
+https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/types.html#custom-mapping-types
+
+	# создаём в Postgre
+	CREATE DOMAIN MyMoney AS DECIMAL(18,3);
+	# ...
+
+
+
 
 Предварительный вывод: DBAL очень хорошо продуманная и легковестная либа,
 отлично подойдет для любого проекта где есть реляционные БД.
-ORM удобна, и её желательно использовать везде, где есть четкая доменная система сущностей.
+ORM удобна, и её желательно использовать везде, где есть чёткая доменная система сущностей.
 На базах с плохим дизайном она ляжет криво и потребуется выдумывать всевозможные костыли.
