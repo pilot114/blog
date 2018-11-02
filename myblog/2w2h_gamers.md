@@ -301,6 +301,7 @@ class MyEventListener
 - Работа со схемой также дублируется
 
 UUID также немного ухудшают производительность при работе с ними как с первичными ключами.
+Чтобы UUID были переносимыми, следует создавать их на строне приложения, например используя https://github.com/ramsey/uuid
 
 https://www.doctrine-project.org/projects/doctrine-dbal/en/2.8/reference/sharding_azure_tutorial.html#sqlazure-sharding-tutorial
 
