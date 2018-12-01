@@ -8,9 +8,10 @@
 2h
 2h 30m
 --- 19h --- plan - 28h
-0:50-2:20
-2:40-3:20
-0:50 2:00
+1h30m
+40m
+1h10m
+1h20m
 
 ## Обзор Doctrine
 
@@ -395,16 +396,111 @@ ManyToMany на себя - типичный случай для организа
 
 В качестве связи можно указывать и сущность своего типа (Self-referencing)
 
-в случаях OneToMany и ManyToMany всегда следует инициализировать соотвтествующие поля 
+в случаях OneToMany и ManyToMany всегда следует инициализировать соотвествующие поля 
 как ArrayCollection в конструкторах сущностей.
 
 [Базовый маппинг]
+Message:
+  type: entity
+  table: message (необязательно)
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO (способ инкремента, который предпочтителен в данной БД) | UUID | CUSTOM | SEQUENCE (для Oracle/Postgre)
+        sequenceGenerator: (только если SEQUENCE)
+          sequenceName: message_seq
+          allocationSize: 100
+          initialValue: 1
+  fieldName:
+    type: string (по умолчанию)
+    length: 255 (по умолчанию)
+    unique: false (по умолчанию)
+    nullable: false (по умолчанию)
+    precision: 0 (точность, только для decimal)
+    scale: 0 (шкала, только для decimal)
+    columnDefinition: (DDL сниппет для создания колонки)
+    options: (ключ-зачения, передаваемые платформе)
+
+allocationSize может дать хороший прирост для INSERT (в данном примере doctrine возьмет сразу 100 id для вставки сущностей)
+(но следует использовать только для сгенеренных таблиц, чтобы избежать дублей ключей!)
+
 [Пачки]
+
+Вставка:
+
+	$batchSize = 20;
+	for ($i = 1; $i <= 10000; ++$i) {
+	    $user = new CmsUser;
+	    $user->setStatus('user');
+	    $user->setUsername('user' . $i);
+	    $user->setName('Mr.Smith-' . $i);
+	    $em->persist($user);
+	    if (($i % $batchSize) === 0) {
+	        $em->flush();
+	        $em->clear(); // Detaches all objects from Doctrine!
+	    }
+	}
+	$em->flush();
+	$em->clear();
+
+Обновление:
+
+	$q = $em->createQuery('update MyProject\Model\Manager m set m.salary = m.salary * 0.9');
+	$numUpdated = $q->execute();
+
+Удаление:
+
+	$q = $em->createQuery('delete from MyProject\Model\Manager m where m.salary > 100000');
+	$numDeleted = $q->execute();
+
+Просто перебирать результаты, не тратя много памяти:
+
+	$q = $this->_em->createQuery('select u from MyProject\Model\User u');
+	$iterableResult = $q->iterate();
+	foreach ($iterableResult as $row) {
+	    // do stuff with the data in the row, $row[0] is always the object
+	    // detach from Doctrine, so that it can be Garbage-Collected immediately
+	    $this->_em->detach($row[0]);
+	}
+
+
 [Лучшие практики]
+
+- Избегать двухнаправленных связей
+- Удалять ненужные связи
+- Избегать составных ключей
+- Разумно использовать события и каскады (обосновывать использование)
+- связи и поля должны быть отдельно
+- явная демаркация транзакций
+
 [Кэширование]
+Все драйверы кэширования имеют интерфейс:
+
+	$cacheDriver->setNamespace('my_namespace_');
+	$cacheDriver->save('cache_id', 'my_data', $lifeTime);
+	if ($cacheDriver->contains('cache_id')) {...};
+	$array = $cacheDriver->fetch('my_array');
+	$cacheDriver->delete('my_array');
+	$deleted = $cacheDriver->deleteAll();
+
+Чистить кэши также можно командами:
+
+	# кэш sql (чтобы не билдить каждый раз из DQL)
+	./doctrine orm:clear-cache:query
+	# кэш маппинга
+	./doctrine orm:clear-cache:metadata
+	# кэш данных
+	./doctrine orm:clear-cache:result
+
+
++ http://notmysock.org/blog/php/user-cache-timebomb.html
+
 [События]
 
 
+https://habr.com/post/334404/#comment_10335592
+говорят, фильтры доктрины это плохо
 
 Предварительный вывод: DBAL очень хорошо продуманная и легковестная либа,
 отлично подойдет для любого проекта где есть реляционные БД.
