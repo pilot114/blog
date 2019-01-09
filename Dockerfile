@@ -1,10 +1,6 @@
-FROM ruby
-
-RUN gem install jekyll bundler
+FROM pilot114/base-workspace72
 
 WORKDIR /blog
 
-EXPOSE 4000
-COPY entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
-CMD ["/bin/bash", "entrypoint.sh"]
+EXPOSE 8080
+EXPOSE 8000
