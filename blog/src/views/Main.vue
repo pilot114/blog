@@ -1,7 +1,6 @@
 <template>
   <div class="home">
-    <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <markdown path="2019-01-08-test"/>
+    <markdown path="babylon/2019-06-12"/>
   </div>
 </template>
 

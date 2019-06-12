@@ -16,7 +16,9 @@
 #app {
   font-family: 'Source Sans Pro', sans-serif;
   color: #2c3e50;
-  margin: 5em 20em;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
   text-align: justify;
 }
 .fade-enter-active, .fade-leave-active {
