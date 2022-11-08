@@ -1,4 +1,4 @@
-FROM pilot114/base-workspace72
+FROM pilot114/workspace73
 
 WORKDIR /app
 
