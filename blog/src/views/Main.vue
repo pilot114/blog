@@ -1,16 +1,19 @@
 <template>
-  <div class="home">
-    <markdown path="babylon/2019-06-12"/>
+  <div>
+    <Block text="Последняя статья"/>
+    <markdown path="babylon/webRender"/>
   </div>
 </template>
 
 <script>
+import Block from '@/components/Block.vue'
 import Markdown from '@/components/Markdown.vue'
 
 export default {
   name: 'home',
   components: {
-    Markdown
+    Markdown,
+    Block,
   }
 }
 </script>

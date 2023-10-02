@@ -1,5 +1,5 @@
 <template>
-  	<div v-html="html"></div>
+  <div v-html="html"></div>
 </template>
 
 <script>
@@ -38,6 +38,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>

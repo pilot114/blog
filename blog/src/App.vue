@@ -1,14 +1,12 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/author">Author</router-link>
+      <router-link to="/">Главная</router-link> |
+      <router-link to="/articles">Статьи</router-link> |
+      <router-link to="/notes">Заметки</router-link> |
+      <router-link to="/about">Автор</router-link>
     </div>
-    <transition name="fade" mode="out-in">
-      <keep-alive>
-        <router-view/>
-      </keep-alive>
-    </transition>
+    <router-view/>
   </div>
 </template>
 
@@ -21,10 +19,6 @@
   margin-right: auto;
   text-align: justify;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .1s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
 </style>
+<script>
+</script>
