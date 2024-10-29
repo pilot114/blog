@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hacker Minimalist Website</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.1/dist/tailwind.min.css">
+    <style>
+        /* Custom styles */
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+        }
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 25%;
+        }
+        .nav-link {
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .nav-link:hover {
+            background-color: #4a4a4a;
+        }
+        .main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 7rem);
+        }
+        .content {
+            text-align: center;
+        }
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+        .subtitle {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 5rem;
+            margin-top: 2rem;
+            background-color: #4a4a4a;
+        }
+        .footer-text {
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div class="logo">Hacker Website</div>
+        <nav class="nav">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Contact</a>
+        </nav>
+    </header>
+    <main class="main">
+        <div class="content">
+            <h1 class="title">Hacker Website</h1>
+            <h2 class="subtitle">Minimalist and stylish</h2>
+            <p>Welcome to our website, where you can find the latest news and trends in the world of hacking and cybersecurity. Stay ahead of the game with our expert analysis and insights.</p>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-text">&copy; 2023 Hacker Website. All rights reserved.</div>
+    </footer>
+</div>
+</body>
+</html>
