@@ -1,0 +1,32 @@
+{
+  "title": "blog",
+  "nav": [
+    { "path": "/", "label": "Главная" },
+    { "path": "/articles", "label": "Статьи" },
+    { "path": "/notes", "label": "Заметки" },
+    { "path": "/about", "label": "Автор" }
+  ],
+  "main": {
+    "block": "Последняя статья",
+    "post": "babylon/webRender"
+  },
+  "articles": {
+    "block": "Все статьи в блоге, в основном по теме программирования",
+    "list": [
+      { "path": "babylon/webRender", "title": "JS for Games — Babylon.js" },
+      { "path": "devops/intro", "title": "DevOps: введение" },
+      { "path": "devops/grafana", "title": "Используем Grafana для отображения метрик" },
+      { "path": "little-php-book/intro", "title": "Little PHP book — предисловие" },
+      { "path": "tutorial/doctrine", "title": "Обзор Doctrine" },
+      { "path": "tutorial/doctrine2", "title": "Doctrine ORM — практика" },
+      { "path": "CheckIO", "title": "Качаем скилл с CheckIO" }
+    ]
+  },
+  "notes": {
+    "block": "Небольшие заметки на разные темы",
+    "list": []
+  },
+  "about": {
+    "html": "<h1>Автор</h1><p>Заметки и статьи по программированию.</p>"
+  }
+}

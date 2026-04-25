@@ -1,6 +1,0 @@
-FROM pilot114/workspace73
-
-WORKDIR /app
-
-EXPOSE 8080
-EXPOSE 8000
